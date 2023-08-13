@@ -1,0 +1,221 @@
+DAY 5 CCNA TRAINING
+
+
+
+TROUBLESHOOTING 
+1. change ? (Revert)
+2. ISP & Device
+3. Routing - show ip route 
+Vlan - 
+!show vlan brief, - the ports
+!show ip int brief - Check SV1 (if no ip it's not good)
+4. Gateway
+
+PING - echo request, echo back
+
+SWITCH - 
+!L2 - Not capable of routing
+!L3 - capable of routing
+
+delete flash:vlan.dat - apply access and trunk
+
+
+spine tree = loop
+
+L3 - encapsulation dot1q
+L2 - no encapsulation dot1q
+
+
+==ROUTING PROTOCOLS==
+STP - is a standard 802.1D 
+!prevent loop
+DTP - 802.1Q Dynamic
+RSTP - Rapid 
+HSTP - Hot standby Routing Protocol
+VRRP (Same protocols but Router)
+GLPB - Switch
+IP SLA (Cisco)
+
+
+TRUNKING 
+SW - SW (Both switches)
+Trunking allowing multiple vlan in 1 port
+show int trunk
+
+
+
+Root Bridge - BOSS
+Root Port - otw to BOSS
+
+802.1D - STP (Spanning-tree Protocol)
+ conf t
+	spanning-tree vlan 1
+	spanning-tree vlan 100
+	
+show spanning-tree vlan 1
+
+
+
+ELECTION ROOT BRIDGE / BOSS OF THE SWITCHES!! (The Highest Win)
+	1. Bridge Priority - 32768
+	2. Lowest MAC wins - 32868
+
+
+conf t
+	spanning-tree vlan 1 priority 8192
+
+
+To make it boss again (switch) ikaw na ang magiging root bridge 
+4096 is the min. 8192 is the max. (This is the bridge is the root)
+
+conf t
+	spanning-tree vlan 1 root primary 
+
+
+ELECTION OF ROOT PORT: (The Lowest Win)
+1.	Port priority - 128
+2. Cost - GIGA - 4, FE - 19
+3019
+3. Port Number - 30 seconds 
+Role 
+Alternate fwd, blck, lrn 
+
+802.1W - RSTP (Rapid-STP)
+
+
+ROOT BRIDGE
+conf t
+	spanning-tree mode rapid-pvst
+	spanning-tree backbonefast
+	interface range fa 0/1 -8 
+		switchport mode access
+		spanning-tree portfast
+		
+ALALALAY/ NON ROOT
+conf t
+	spanning-tree mode rapid-pvst
+	spanning-tree uplinkfast
+	interface range fa 0/1 -8 
+		switchport mode access
+		spanning-tree portfast
+
+
+PORT SECURITY
+
+!!@@CoreTaas:
+conf t
+	int fa0/1
+		switchport port-security
+		switchport port-security mac-address sticky
+		switchport port-security maximum 1
+		switchport port-security violation shutdown
+		end
+show port-security address
+show interface status err-disable
+
+!!To make the port make alive again!!
+conf t
+	int fa0/1
+		shut
+		no shut
+	end
+
+
+!!CORETAAS
+conf t
+	int fa 0/4
+		switchport mode access
+		switchport access vlan 100
+
+
+!!ETHER CHANNEL (LACP protocol)
+!!@@COREBABA AT CORETAAS
+conf t
+	int  range fa 0/10 - 12
+	shut
+	channel-group 1 mode active
+	channel-protocol lacp
+	no shut
+	int port-channel 1
+		switchport trunk encapsulation  dot1q
+		switchport mode trunk
+		
+!Show commands:
+show int po1 | inc BW  (bandwidth)
+show etherchannel summary
+
+
+
+
+SWTAAS/SWBABA/EDGE
+erase startup-config
+reload
+
+
+
+!!!@@@SWTAAS
+conf t
+	int range fa 0/7 - 10
+	switchport trunk encapsulation dot1q
+	switchport mode trunk
+show interface trunk
+
+
+!!@@CORE 1
+conf t
+	int vlan 1
+	shut
+	
+	
+HSRP (Hot Standby Routing Protocol(Switch))
+!!@@CORE1
+conf t
+	int vlan 1
+		ip add 10.0.0.3 255.0.0.0
+		standby 1 ip 10.0.0.1
+		standby 1 preempt
+		standby 1 priority 150
+		!standby 1 priority 100
+	end
+	
+	int vlan 2
+		ip add 11.0.0.3 255.0.0.0
+		standby 2 ip 10.0.0.1
+		standby 2 preempt
+		standby 2 priority 150
+		!standby 2 priority 100
+	end
+show standby brief
+
+	
+!!@@EDGE
+conf t
+	hostname ISProuter
+	int gi0/0/0
+	 no shut
+	 ip add 100.0.0.2 255.255.255.0
+	int gi0/0/1
+	 no shut
+	 ip add 200.0.0.2 255.255.255.0
+	int loopback 0
+	 ip add 8.8.8.8 255.255.255.255
+	router eigrp 100
+		no auto-summary
+		network 100.0.0.0
+		network 200.0.0.0
+		network 8.8.8.8
+		end
+		
+
+
+
+
+
+
+
+!!Core taas
+Mac Add:
+ f025.726e.3400
+!!Core Baba
+Mac Add:
+ 0817.3510.bc80
