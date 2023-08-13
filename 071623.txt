@@ -1,0 +1,111 @@
+WindowsServer:
+administrator
+C1sc0123
+
+Linux:
+kaliHacker: Kali, C1sc0123
+RedHat: root, C1sc0123
+
+Cisco:
+admin
+pass
+
+5days: 
+m - > friday: homelab.
+
+skillLevel: 200-301
+NetworkSkills: lvl: 3yrs,
+
+SystemsSystems: windows server + linux
+
+DevopsSkills: python, JSON, Automation(ansible)
+
+Robert Victor
+LinkedIn
+
+
+Aut
+
+Team Rivan Alumni
+
+Task 1: 
+
+Task 2: How to talk/configure:
+cisco, fortinet, sophos, palo devices: console port "out of band management"/
+
+
+poor: PUTTY
+
+Task 3: Network Engineer: share configs.
+Github
+
+Task 4: Cisco Unified Call Manager: CUCM
+
+Before: 2000: King of Voice = Avaya
+
+After: 2000: King of Voice = Cisco Callmanager
+
+Lately: )-: king of Voice = microsoft Teams (Landline)
+
+
+Task 5: Edge router config:
+
+Old Cisco = Cisco IOS
+
+New Cisco = LinuxBased Cisco
+	    CSRouters/ LinuxRouter
+
+
+Task 6: Ang tunay na work sa Network Engineer sa Buong mundo:
+Switching: Layer2/Layer3:STP/NEXUS
+
+Routing: 4 + 1
+(CCNA) 
+Static Routing: MinWage  (Router)
+Ospf Routing: 18k - 25k
+
+Eigrp Routing: s, 0s + eigrp = 25-35k
+Bgp Routing: 50k UP: 95k, POGO: chinaIP address
+site to site VPN:
+
+Task 7: The day I become a network Engineer:
+Routing: cucm, switch and EDGE:
+@cucm: Endpoint: Default routing:
+config t
+ip route 0.0.0.0 0.0.0.0 10.52.100.4
+
+@Corebaba: endPointSW:
+config t
+ip routing
+ip route 0.0.0.0 0.0.0.0 10.52.52.1
+
+@EDGErouter: static Routing for real XP:
+
+c>tracert -d 200.0.0.52
+Windows:
+route add 10
+Solution: Malupit na routing: 
+EDGE: sh cdp neighbor
+
+Task 10: IVRs: INTERACTIVE VOICE RESPONSE SYSTEM:
+Welcome to Rivan Institute, Press 1
+for tech sales, 
+press 2 for enrolment press 3 for tech services
+press 4 for reception.
+step1: record ur voice/ voice talent
+Step2: send the file for conversion to welcome.au
+step3: send the welcome.au to Cisco Cucm
+
+Task 11: Virtualization in CCNA:
+VMware: Esxi industry standard
+
+
+root
+C1sc0123
+rm -r /etc/udev/rules.d/70-persistent-net.rules
+
+
+
+
+
+

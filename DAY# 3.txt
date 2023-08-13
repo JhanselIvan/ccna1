@@ -1,0 +1,335 @@
+git clone https://github.com/rivancorp/encord1
+
+load balancing 
+
+Step 1: give static IP address to p1/p2
+
+Task 4: Default Route : 0.0.0.0 0.0.0.0
+			0.0.0.0/0
+			any(where)
+
+
+p1:
+conf t
+ip route 0.0.0.0 0.0.0.0 10.2.1.1 1
+ip route 0.0.0.0 0.0.0.0 10.2.1.2 10
+
+p2:
+conf t
+ip route 0.0.0.0 0.0.0.0 10.2.1.2 1
+ip route 0.0.0.0 0.0.0.0 10.2.1.1 10
+
+0.0.0.0/0 [1/0] via 10.2.1.2 - Surfing
+S* - Default route
+
+
+
+Task 5: learning about dynamic routing
+
+Dynamic Route: send/recieve updates:
+
+EIGRP : Enhance interior gateway routing protocol:
+
+-The FASTEST routing protocol : ANDAR AGAD!!!
+-Cisco Invention/Proprietary only on CISCO DEVICES
+-ang meron EIGRP: mayaman ang company/MultiNational
+madami Bonus.
+
+TASK9.1: Combined d1 and d2 for hsrp:
+!!@@D1: NEXUS-like
+conf t
+	router eigrp CCNPLEVEL
+		address-family ipv4 unicast autonomous-system 100
+		network 10.1.4.4 0.0.0.3
+		network 10.2.1.0 0.0.0.255
+		network 10.2.2.0 0.0.0.255
+		network 192.168.1.128 0.0.0.31
+		end.
+
+
+!!@@D2: NEXUS-like
+conf t
+	router eigrp CCNPLEVEL
+		address-family ipv4 unicast autonomous-system 100
+		network 10.1.4.8 0.0.0.3
+		network 10.2.1.0 0.0.0.255
+		network 10.2.2.0 0.0.0.255
+		network 192.168.1.128 0.0.0.31
+		end
+
+
+!!@@R4:RouterEIGRP of NEXUS
+
+conf t
+router eigrp 100
+network 10.1.4.4 0.0.0.3
+network 10.1.4.8 0.0.0.3
+
+How to check if Eigrp is working: For RICH COMPANIES:
+
+1. show ip protocols:
+	4 sources
+2. show ip eigrp neighbors
+	4 
+3. show ip eigrp traffic
+4. show ip eigrp topology
+5. show ip route eigrp
+
+
+!!@@P1: 
+conf t
+ip route 10.1.4.4 255.255.255.252 10.2.1.3 20
+ip route 10.1.4.5 255.255.255.255 10.2.1.4 2
+router eigrp 100
+no auto-summary
+network 10.0.0.0
+
+subnet longest mass
+admin mass if tabla
+
+
+Type: Parameters
+K1: 1 - K6:1
+
+Diksjistra Algorithm
+
+
+OSPF NETWORK:
+R4:
+config t
+int lo 0
+ip add 4.4.4.4 255.255.255.255
+router ospf 1
+network 4.4.4.4 0.0.0.0 area 34
+network 10.1.1.8 0.0.0.3 area 34
+
+R3:
+config t
+int lo 0
+ip add 3.3.3.3 255.255.255.255
+router ospf 1
+network 3.3.3.3 0.0.0.0 area 34
+network 10.1.1.4 0.0.0.3 area 0
+network 10.1.1.8 0.0.0.3 area 34
+
+R2:
+config t
+int lo 0
+ip add 2.2.2.2 255.255.255.255
+router ospf 1
+network 2.2.2.2 0.0.0.0 area 0
+network 10.1.1.4 0.0.0.3 area 0
+network 10.1.1.0 0.0.0.3 area 12
+
+R1:
+config t
+int lo 0
+ip add 1.1.1.1 255.255.255.255
+router ospf 1
+network 1.1.1.1 0.0.0.0 area 12
+network 10.1.1.0 0.0.0.3 area 12
+
+##How to check if OSPF is Working:
+
+1. show ip protocols
+2. show ip ospf neighbor
+3. show ip ospf database
+4. show ip route ospf
+
+Link State Update LSU
+O - type 1 LSA [link state advertisement]
+O I A - type 3
+
+++Wireshark++
+
+!HELLO
+Router ID
+Area ID
+Subnet mask ID
+Authentication ID
+
+!OSPF Hello Packet 
+HELLO DEAD
+
+
+TELCO or Service Provider
+!!BGP di kaya ayusin ang sarili
+++NOKU
+notification
+open
+keep alive
+update
+
+How to configure RealWorld BGP:
+TASK9.3: BASIC eBGP FOR ISPS and R1.
+R1 BGP:
+config t
+router bgp 1
+ bgp log-neighbor-changes
+ neighbor 208.8.8.4 remote-as 45
+ neighbor 207.7.7.2 remote-as 2
+ neighbor 209.9.9.3 remote-as 3
+ network 10.0.0.0 Mask 255.255.255.252
+ network 207.7.7.0
+ network 208.8.8.0
+ network 209.9.9.0
+end
+@@@ISP1:
+CONFIG T
+router bgp 45
+bgp log-neighbor-changes
+neighbor 24.2.4.2 remote-as 2
+neighbor 45.4.5.5 remote-as 45
+neighbor 208.8.8.1 remote-as 1
+network 208.8.8.0
+network 24.2.4.0 mask 255.255.255.0
+network 44.44.44.44 mask 255.255.255.255
+network 45.4.5.0 mask 255.255.255.0
+!PretentInternet
+network 0.0.0.0
+ip route 0.0.0.0 0.0.0.0 null 0
+ip route 10.0.0.0 255.0.0.0 208.8.8.1
+end
+
+@@@ISP2:
+config t
+router bgp 2
+bgp log-neighbor-changes
+neighbor 24.2.4.4 remote-as 45
+neighbor 25.2.5.5 remote-as 45
+neighbor 32.3.2.3 remote-as 3
+neighbor 207.7.7.1 remote-as 1
+network 207.0.0.0
+network 22.22.22.22 mask 255.255.255.255
+network 24.2.4.0 mask 255.255.255.0
+network 25.2.5.0 mask 255.255.255.0
+network 32.3.2.0 mask 255.255.255.0
+!fakeInternet
+network 0.0.0.0
+ip route 0.0.0.0 0.0.0.0 null 0
+ip route 10.0.0.0 255.0.0.0 207.7.7.1
+end
+@@ISP3:
+CONFIG T
+router bgp 3
+bgp log-neighbor-changes
+neighbor 32.3.2.2 remote-as 2
+neighbor 35.3.5.5 remote-as 45
+neighbor 209.9.9.1 remote-as 1
+network 209.9.9.0
+network 32.3.2.0 mask 255.255.255.0
+network 33.33.33.33 mask 255.255.255.255
+network 35.3.5.0 mask 255.255.255.0
+-----------Fake Internet-------------
+network 0.0.0.0
+ip route 0.0.0.0 0.0.0.0 null 0
+ip route 10.0.0.0 255.0.0.0 209.9.9.1
+end
+
+Isp4:
+config t
+int lo 8
+ ip add 8.8.8.8 255.255.255.255
+router bgp 45
+ bgp log-neighbor-changes
+ neighbor 25.2.5.2 remote-as 2
+ neighbor 35.3.5.3 remote-as 3
+ neighbor 45.4.5.4 remote-as 45
+ network 8.8.8.8 mask 255.255.255.255
+ network 55.55.55.55 mask 255.255.255.255
+ network 25.2.5.0 mask 255.255.255.0
+ network 35.3.5.0 mask 255.255.255.0
+ network 45.4.5.0 mask 255.255.255.0
+end
+
+How to check BGP Realworld:
+1.show ip bgp neighbor
+	BGP = Established 
+2. show ip bgp summary
+	UP/DOWN = 00:01 18/ 
+3. show ip route bgp
+	11 routes - fetus
+	real world bgp - THOUSANDS
+
+Task 9: BAKIT LAHAT NG JOB OFFER FOR OSPF
+PARTNER SI BGP 
+
+OSPF is the PERFECT PARTNER FOR 
+BGP, because OSPF can create
+a Single Default Route for BGP:
+
+@R1:
+conf t
+router ospf 1
+default-information originate
+end
+
+@R4:
+conf t
+router ospf 1
+default-information originate
+end
+
+Task 11: Protocol Redistribution/Route Redistribution
+
+Step1: Pasok si Eigrp kay OSPF:
+R4:
+conf t
+router ospf 1
+redistribute eigrp 100 subnets
+
+check:
+R3:
+sh ip 
+Step2: Basag OSPF and Pasok sa EIGRP: O ---> DEX
+conf t
+router eigrp 100
+redistribute ospf 1 Metric 10000 100 255 1 1500
+
+
+
+
+Task 12: Routing: Static,eigrp,opsf,bgp,route redistribution
+VS Site to site VPN:
+Routing: Fast,stable,Dedicated = VERY FUCKING EXPENSIVE
+
+Step1:
+what is VPN: encryption + Hashing + Tunneling
+	-sysmetric	sha1/md5	IPSEC,GRE,PPTP
+	-asymmetric	sha256
+	"AES128/256"	
+
+JPLINUX:
+sudo ifconfig eth0 10.10.10.10 netmask 255.255.255.0 up
+sudo route add default gw 10.10.10.1
+
+PHLINUX:
+sudo ifconfig eth0 10.20.20.20 netmask 255.255.255.0 up
+sudo route add default gw 10.20.20.1	
+
+Step2: Configure jpvpn/phvpn for basic Ip address:
+conf t
+no logging console
+no ip domain-lookup
+int gi 2
+no shut
+ip add 192.168.102.10 255.255.255.0
+do sh ip int brief
+
+
+#NO RECORD
+SIA-Queries sent/received: 0/0
+SIA-Replies sent/received: 0/0
+
+
+
+
+ANSIBLE - Configuration Management System
+CUCM
+Switch
+
+
+erase ng config
+
+erase startup-config
+reload 
