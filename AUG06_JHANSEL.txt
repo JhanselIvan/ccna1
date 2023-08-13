@@ -1,0 +1,144 @@
+PERMIT AND DENY protocol ports
+
+conf t
+ip dhcp excluded-add 192.168.102.1 192.168.102.150
+ip dhcp pool pool2
+network 192.168.102.0 255.255.255.0
+default-router 192.168.102.8
+domain-name rivanit.com
+dns-server 8.8.8.8
+exit
+int gi 2
+no shut
+ip add 192.168.102.8 255.255.255.0
+int gi 3
+no shut
+ip add 192.168.103.8 255.255.255.0
+
+ExamLABno2.: 
+create an access-list so that: 
+192.168.102.151 can ping,ssh 192.168.103.8
+192.168.102.151 can web, https 192.168.103.8
+@exam5n1:
+no access-list 100
+access-list 100 perm icmp ho 192.168.102.151 ho 192.168.103.8
+access-list 100 perm tcp ho 192.168.102.151 ho 192.168.103.8 eq 22
+access-list 100 perm tcp ho 192.168.102.152 ho 192.168.103.8 eq 80
+access-list 100 perm tcp ho 192.168.102.152 ho 192.168.103.8 eq 443
+int gi 3
+ip access-group 100 OUT
+
+
+@@Lab 3: NETWORK ADDRESS TRANSLATION:
+CONFIGURE NAT SO THAT ALL LINUX DEVICES
+CAN HAVE INTERNET:
+STEP 1: Give fast internet to 5n1:
+conf t
+ip route 0.0.0.0 0.0.0.0 192.168.108.2
+ip domain-lookup
+ip name-server 8.8.8.8 1.1.1.1
+do ping www.nba.com
+
+step 2:create a standard ACL to allow all linux:
+conf t
+access-list 5 permit 192.168.102.0 0.0.0.255
+access-list 5 permit 192.168.103.0 0.0.0.255
+
+step 3: Create a static NAT pool and overload:
+inside: local				inside: global:
+192.168.102.151				192.168.108.69
+192.168.102.152				192.168.108.88
+192.168.103.8				192.168.108.55
+@@
+conf t
+ip nat inside source static 192.168.102.151 192.168.108.69
+ip nat inside source static 192.168.102.152 192.168.108.88
+ip nat inside source list 5 int gi 1 overload 
+
+Step 4:
+Define NAT inside and define outside
+@
+conf t
+int gi 1
+ip nat outside
+int gi 2
+ip nat inside
+int g3
+ip nat inside
+
+ping 1.1.1.1 source 192.168.103.8
+
+@@LAB4: Network Time Protocol
+EXAMS5n1L# show clock
+*14:57:34.378 UTC Sun Aug 6 2023 ---> pst:
+CONFIGURE YOUR ROUTER TO USE AMERICAN PACIFIC STAND TIME:
+
+TIME SERVER: time.google.com
+@@
+conf t
+ntp server time.google.com
+end
+show ntp association
+sh clock
+(show ntp status)
+
+
+
+@@@
+conf t
+ntp server cn.pool.ntp.org
+end
+show ntp association
+sh clock
+(show ntp status)
+
+
+
+
+@@@EXAMLABNO.5: secure shell/ssh protocol:
+Telnet is badd!!! not secure!!!
+
+Cryptool
+
+FD E8 F7 A9 B8 6C 3B FF 07 C0 D3 9D 04 60 5E DC
+
+8F F2 76 84 FD E9 B0 FE 81 91 76 88 5C 78 90 7D 68 0E 
+78 D0 D4 92 97 CF B1 87 20 BB 3A 29 F0 80 80 6E 30 A9 
+84 6A E2 85 CB 70 9B A7 AA 40 F3 FF
+
+
+How to configure SSH:
+conf t
+ip domain-name secure.com
+crypto key generate rsa
+???512 xxx, 1024
+ip ssh version 2
+username ssh privilege 15 secret pass
+line vty 0 14
+login local
+
+
+
+
+@@TASK 7: devOPS are former network engineers
+that has betrayed their origins ! Traitor:
+alipin ng salapi!
+
+devOPS = Network + linux + RestAPI + JSON 
+		network programming/automation.
+		Postman
+
+
+Install ubuntu docker container (Microsoft store)
+install kali linux container
+To manage docker need KURBENETES
+Docker = 
+kali linux = 
+
+Laptop
+docker
+kurbenetes
+
+
+
+3 Step approach to network
